@@ -47,10 +47,6 @@ services:
     networks:
       - cdo-network
 
-networks:
-  cdo-network:
-    driver: bridge
-
   # Development service (optional)
   dev:
     image: node:20-alpine
@@ -64,3 +60,9 @@ networks:
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
     profiles:
       - dev
+    networks:
+      - cdo-network
+
+networks:
+  cdo-network:
+    driver: bridge
