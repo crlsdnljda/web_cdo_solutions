@@ -1,5 +1,5 @@
-// API URL del backend
-const API_URL = import.meta.env.VITE_API_URL || 'https://api.cdo.solutions';
+// API URL del backend - usa ruta relativa para proxy inverso
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 export interface ContactFormData {
   name: string;
