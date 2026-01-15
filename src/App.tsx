@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { ContactModal } from '@/components/ContactModal';
+import { CookieConsent } from '@/components/CookieConsent';
 import { ContactModalProvider } from '@/context/ContactModalContext';
 import { Home } from '@/pages/Home';
 import { Servicios } from '@/pages/Servicios';
@@ -92,6 +93,7 @@ function App() {
 
         <Footer />
         <ContactModal />
+        <CookieConsent />
       </div>
     </ContactModalProvider>
   );
