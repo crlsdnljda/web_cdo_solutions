@@ -192,7 +192,7 @@ export function Hero() {
             {[
               { value: '6+', label: 'Productos propios' },
               { value: '30+', label: 'Integraciones' },
-              { value: '24/7', label: 'Soporte técnico' },
+              { value: '100%', label: 'Compromiso' },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}

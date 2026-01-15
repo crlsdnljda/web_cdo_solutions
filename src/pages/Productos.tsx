@@ -47,12 +47,12 @@ const products = [
     name: 'WhatsApp Bots',
     tagline: 'Automatización inteligente para WhatsApp Business',
     description:
-      'Bots avanzados para WhatsApp Business que automatizan la atención al cliente, gestión de pedidos y notificaciones. Respuestas personalizadas 24/7 que mejoran la experiencia del cliente.',
+      'Bots avanzados para WhatsApp Business que automatizan la atención al cliente, gestión de pedidos y notificaciones. Respuestas personalizadas que mejoran la experiencia del cliente.',
     icon: MessageCircle,
     color: 'from-green-500 to-emerald-500',
     status: 'available',
     features: [
-      'Respuestas automáticas inteligentes 24/7',
+      'Respuestas automáticas inteligentes',
       'Integración con CRM y tiendas online',
       'Flujos de conversación personalizados y ramificados',
       'Notificaciones de pedidos, envíos y entregas',

@@ -36,7 +36,7 @@ const products = [
       'Bots inteligentes para WhatsApp Business. Automatiza la atención al cliente, gestión de pedidos y notificaciones con respuestas personalizadas.',
     icon: MessageCircle,
     features: [
-      'Respuestas automáticas 24/7',
+      'Respuestas automáticas inteligentes',
       'Integración con CRM y tiendas',
       'Flujos de conversación personalizados',
       'Notificaciones de pedidos y envíos',
