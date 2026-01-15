@@ -8,8 +8,14 @@ import {
   Headphones,
   ArrowRight,
 } from 'lucide-react';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useInView,
+} from 'motion/react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { useParallax } from '@/hooks/useParallax';
 
 const services = [
   {
@@ -55,20 +61,35 @@ const services = [
 ];
 
 export function Services() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const parallaxOffset = useParallax(sectionRef, { speed: 0.1 });
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const isHeaderInView = useInView(headerRef, { once: true, amount: 0.3 });
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['-10%', '10%']);
+  const smoothBackgroundY = useSpring(backgroundY, { stiffness: 100, damping: 30 });
 
   return (
     <section ref={sectionRef} className="py-24 md:py-32 relative overflow-hidden">
-      {/* Background decoration */}
-      <div
+      {/* Background decoration with parallax */}
+      <motion.div
         className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent"
-        style={{ transform: `translateY(${parallaxOffset}px)` }}
+        style={{ y: smoothBackgroundY }}
       />
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Section header */}
-        <div className="max-w-2xl mb-16 animate-on-scroll">
+        <motion.div
+          ref={headerRef}
+          className="max-w-2xl mb-16"
+          initial={{ opacity: 0, x: -50 }}
+          animate={isHeaderInView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.6 }}
+        >
           <span className="text-primary font-medium mb-4 block">
             Nuestros Servicios
           </span>
@@ -80,37 +101,66 @@ export function Services() {
             Ofrecemos un amplio catálogo de servicios diseñados para optimizar y
             hacer crecer tu empresa.
           </p>
-        </div>
+        </motion.div>
 
         {/* Services grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => (
-            <Link
-              key={service.title}
-              to={service.href}
-              className="group animate-on-scroll"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <Card className="h-full hover:border-primary/50 transition-all duration-300 group-hover:-translate-y-1">
-                <CardHeader className="space-y-4">
-                  <div
-                    className={`w-14 h-14 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center shadow-lg`}
-                  >
-                    <service.icon className="w-7 h-7 text-white" />
-                  </div>
-                  <CardTitle className="text-xl group-hover:text-primary transition-colors flex items-center gap-2">
-                    {service.title}
-                    <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  </CardTitle>
-                  <CardDescription className="text-base leading-relaxed">
-                    {service.description}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
+            <ServiceCard key={service.title} service={service} index={index} />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function ServiceCard({
+  service,
+  index,
+}: {
+  service: (typeof services)[0];
+  index: number;
+}) {
+  const cardRef = useRef<HTMLAnchorElement>(null);
+  const isInView = useInView(cardRef, { once: true, amount: 0.3 });
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+    >
+      <Link ref={cardRef} to={service.href} className="group block h-full">
+        <motion.div
+          whileHover={{ y: -8, scale: 1.02 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        >
+          <Card className="h-full hover:border-primary/50 transition-colors duration-300">
+            <CardHeader className="space-y-4">
+              <motion.div
+                className={`w-14 h-14 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center shadow-lg`}
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                <service.icon className="w-7 h-7 text-white" />
+              </motion.div>
+              <CardTitle className="text-xl group-hover:text-primary transition-colors flex items-center gap-2">
+                {service.title}
+                <motion.span
+                  initial={{ opacity: 0, x: -10 }}
+                  whileHover={{ opacity: 1, x: 0 }}
+                  className="inline-block"
+                >
+                  <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </motion.span>
+              </CardTitle>
+              <CardDescription className="text-base leading-relaxed">
+                {service.description}
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </motion.div>
+      </Link>
+    </motion.div>
   );
 }

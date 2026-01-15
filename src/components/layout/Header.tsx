@@ -1,19 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useContactModal } from '@/context/ContactModalContext';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const navLinks = [
   { href: '/', label: 'Inicio' },
   { href: '/servicios', label: 'Servicios' },
+  { href: '/productos', label: 'Productos' },
   { href: '/nosotros', label: 'Nosotros' },
-  { href: '/contacto', label: 'Contacto' },
 ];
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { openModal } = useContactModal();
   const location = useLocation();
 
   useEffect(() => {
@@ -32,9 +35,9 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        isScrolled
-          ? 'bg-background/95 backdrop-blur-md border-b border-border shadow-lg'
+        'fixed top-0 left-0 right-0 z-40 transition-all duration-300',
+        isScrolled || isMobileMenuOpen
+          ? 'bg-background border-b border-border shadow-lg'
           : 'bg-transparent'
       )}
     >
@@ -71,47 +74,73 @@ export function Header() {
                 )}
               </Link>
             ))}
-            <Button asChild size="sm">
-              <Link to="/contacto">Contactar</Link>
+            <ThemeToggle />
+            <Button asChild variant="outline" size="sm">
+              <a href="https://crm.cdo.solutions/" target="_blank" rel="noopener noreferrer">
+                <LogIn className="w-4 h-4 mr-2" />
+                Iniciar sesión
+              </a>
+            </Button>
+            <Button size="sm" onClick={openModal}>
+              Contactar
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-foreground hover:text-primary transition-colors"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              className="p-2 text-foreground hover:text-primary transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </nav>
       </div>
 
       {/* Mobile Menu */}
       <div
         className={cn(
-          'md:hidden absolute top-full left-0 right-0 bg-background/98 backdrop-blur-md border-b border-border transition-all duration-300 overflow-hidden',
-          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          'md:hidden absolute top-full left-0 right-0 bg-background border-b border-border shadow-lg transition-all duration-300 overflow-hidden',
+          isMobileMenuOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
         )}
       >
-        <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className={cn(
-                'text-base font-medium py-2 transition-colors duration-200',
-                location.pathname === link.href
-                  ? 'text-primary'
-                  : 'text-muted-foreground hover:text-primary'
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Button asChild className="mt-2">
-            <Link to="/contacto">Contactar</Link>
-          </Button>
+        <div className="container mx-auto px-4 py-6 flex flex-col gap-2">
+          {/* Navigation Links */}
+          <nav className="flex flex-col">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                className={cn(
+                  'text-base font-medium py-3 px-2 rounded-lg transition-colors duration-200',
+                  location.pathname === link.href
+                    ? 'text-primary bg-primary/10'
+                    : 'text-foreground hover:text-primary hover:bg-muted'
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Divider */}
+          <div className="h-px bg-border my-3" />
+
+          {/* Action Buttons */}
+          <div className="flex flex-col gap-3">
+            <Button asChild variant="outline" size="lg" className="w-full justify-center">
+              <a href="https://crm.cdo.solutions/" target="_blank" rel="noopener noreferrer">
+                <LogIn className="w-4 h-4 mr-2" />
+                Iniciar sesión
+              </a>
+            </Button>
+            <Button size="lg" className="w-full justify-center" onClick={() => { setIsMobileMenuOpen(false); openModal(); }}>
+              Contactar
+            </Button>
+          </div>
         </div>
       </div>
     </header>

@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 import {
   Code2,
   Megaphone,
@@ -28,9 +27,11 @@ import {
   Wrench,
   ArrowRight,
 } from 'lucide-react';
+import { motion, useScroll, useTransform, useSpring, useInView } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { useScrollAnimation } from '@/hooks/useParallax';
+import { useContactModal } from '@/context/ContactModalContext';
+import { SEO, getServiciosPageSchemas } from '@/components/seo';
 
 const services = [
   {
@@ -205,77 +206,103 @@ const services = [
   },
 ];
 
-export function Servicios() {
-  useScrollAnimation();
+function ServiceSection({
+  service,
+  index,
+}: {
+  service: (typeof services)[0];
+  index: number;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const Icon = service.icon;
+  const { openModal } = useContactModal();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
+  const smoothY = useSpring(y, { stiffness: 100, damping: 30 });
 
   return (
-    <main className="pt-20">
-      {/* Hero */}
-      <section className="py-16 md:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 geometric-bg opacity-20" />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl">
-            <span className="text-primary font-medium mb-4 block">
-              Servicios
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Soluciones digitales{' '}
-              <span className="gradient-text">completas</span>
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Ofrecemos un catálogo integral de servicios para optimizar,
-              automatizar y hacer crecer tu negocio digital.
-            </p>
-          </div>
-        </div>
-      </section>
+    <motion.section
+      ref={ref}
+      id={service.id}
+      className={`py-16 md:py-24 ${index % 2 === 1 ? 'bg-card/50' : ''} overflow-hidden`}
+    >
+      <div className="container mx-auto px-4">
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Service header */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <motion.div
+              className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center shadow-lg mb-6`}
+              style={{ y: smoothY }}
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
+              <Icon className="w-8 h-8 text-white" />
+            </motion.div>
+            <motion.h2
+              className="text-3xl md:text-4xl font-bold mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              {service.title}
+            </motion.h2>
+            <motion.p
+              className="text-lg text-muted-foreground mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              {service.description}
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <Button onClick={openModal}>
+                Solicitar información
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </motion.div>
+          </motion.div>
 
-      {/* Services */}
-      {services.map((service, index) => (
-        <section
-          key={service.id}
-          id={service.id}
-          className={`py-16 md:py-24 ${index % 2 === 1 ? 'bg-card/50' : ''}`}
-        >
-          <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-12 items-start">
-              {/* Service header */}
-              <div className="animate-on-scroll">
-                <div
-                  className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center shadow-lg mb-6`}
+          {/* Service features */}
+          <div className="grid gap-4">
+            {service.features.map((feature, featureIndex) => {
+              const FeatureIcon = feature.icon;
+              return (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, x: 50, scale: 0.95 }}
+                  animate={
+                    isInView
+                      ? { opacity: 1, x: 0, scale: 1 }
+                      : { opacity: 0, x: 50, scale: 0.95 }
+                  }
+                  transition={{
+                    duration: 0.5,
+                    delay: 0.2 + featureIndex * 0.1,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
                 >
-                  <service.icon className="w-8 h-8 text-white" />
-                </div>
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                  {service.title}
-                </h2>
-                <p className="text-lg text-muted-foreground mb-6">
-                  {service.description}
-                </p>
-                <Button asChild>
-                  <Link to="/contacto">
-                    Solicitar información
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
-
-              {/* Service features */}
-              <div className="grid gap-4">
-                {service.features.map((feature, featureIndex) => (
-                  <Card
-                    key={feature.title}
-                    className="animate-on-scroll"
-                    style={{ animationDelay: `${featureIndex * 100}ms` }}
-                  >
+                  <Card className="hover:border-primary/50 transition-colors duration-300">
                     <CardHeader className="flex flex-row items-start gap-4 space-y-0 pb-2">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <feature.icon className="w-5 h-5 text-primary" />
-                      </div>
+                      <motion.div
+                        className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0"
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                      >
+                        <FeatureIcon className="w-5 h-5 text-primary" />
+                      </motion.div>
                       <div>
                         <CardTitle className="text-lg">{feature.title}</CardTitle>
                       </div>
@@ -286,29 +313,112 @@ export function Servicios() {
                       </CardDescription>
                     </CardContent>
                   </Card>
-                ))}
-              </div>
-            </div>
+                </motion.div>
+              );
+            })}
           </div>
-        </section>
+        </div>
+      </div>
+    </motion.section>
+  );
+}
+
+export function Servicios() {
+  const { openModal } = useContactModal();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <main className="pt-20">
+      <SEO
+        title="Servicios"
+        description="Servicios de desarrollo web, marketing digital, e-commerce, diseño gráfico y consultoría técnica para empresas."
+        canonical="https://cdo.solutions/servicios"
+        schemas={getServiciosPageSchemas()}
+      />
+      {/* Hero */}
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        <div className="absolute inset-0 geometric-bg opacity-20" />
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl">
+            <motion.span
+              className="text-primary font-medium mb-4 block"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              Servicios
+            </motion.span>
+            <motion.h1
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              Soluciones digitales{' '}
+              <span className="gradient-text">completas</span>
+            </motion.h1>
+            <motion.p
+              className="text-lg text-muted-foreground mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              Ofrecemos un catálogo integral de servicios para optimizar,
+              automatizar y hacer crecer tu negocio digital.
+            </motion.p>
+
+            {/* Quick links */}
+            <motion.div
+              className="flex flex-wrap gap-3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              {services.map((service) => (
+                <a
+                  key={service.id}
+                  href={`#${service.id}`}
+                  className="px-4 py-2 rounded-full border border-border hover:border-primary/50 transition-colors text-sm font-medium text-muted-foreground hover:text-primary"
+                >
+                  {service.title.split(' ')[0]}
+                </a>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services */}
+      {services.map((service, index) => (
+        <ServiceSection key={service.id} service={service} index={index} />
       ))}
 
       {/* CTA */}
       <section className="py-16 md:py-24 bg-gradient-to-br from-primary/10 via-transparent to-primary/5">
-        <div className="container mx-auto px-4 text-center animate-on-scroll">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            ¿Necesitas un servicio personalizado?
-          </h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Las herramientas mencionadas son ejemplos y pueden ser sustituidas
-            según las necesidades de tu proyecto.
-          </p>
-          <Button asChild size="lg">
-            <Link to="/contacto">
+        <div className="container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              ¿Necesitas un servicio personalizado?
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Las herramientas mencionadas son ejemplos y pueden ser sustituidas
+              según las necesidades de tu proyecto.
+            </p>
+            <Button size="lg" className="glow" onClick={openModal}>
               Contactar
               <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+            </Button>
+          </motion.div>
         </div>
       </section>
     </main>

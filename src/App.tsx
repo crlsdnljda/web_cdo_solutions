@@ -1,68 +1,99 @@
-import { Routes, Route } from 'react-router-dom';
-import CookieConsent from 'react-cookie-consent';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'motion/react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { PageTransition } from '@/components/layout/PageTransition';
+import { ContactModal } from '@/components/ContactModal';
+import { ContactModalProvider } from '@/context/ContactModalContext';
 import { Home } from '@/pages/Home';
 import { Servicios } from '@/pages/Servicios';
+import { Productos } from '@/pages/Productos';
 import { Nosotros } from '@/pages/Nosotros';
-import { Contacto } from '@/pages/Contacto';
+import { Privacidad } from '@/pages/Privacidad';
+import { Terminos } from '@/pages/Terminos';
+import { Cookies } from '@/pages/Cookies';
 
 function App() {
+  const location = useLocation();
+
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <ContactModalProvider>
+      <div className="min-h-screen bg-background text-foreground">
+        <Header />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/servicios" element={<Servicios />} />
-        <Route path="/nosotros" element={<Nosotros />} />
-        <Route path="/contacto" element={<Contacto />} />
-        {/* Redirect unknown routes to home */}
-        <Route path="*" element={<Home />} />
-      </Routes>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route
+              path="/"
+              element={
+                <PageTransition>
+                  <Home />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/servicios"
+              element={
+                <PageTransition>
+                  <Servicios />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/productos"
+              element={
+                <PageTransition>
+                  <Productos />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/nosotros"
+              element={
+                <PageTransition>
+                  <Nosotros />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/privacidad"
+              element={
+                <PageTransition>
+                  <Privacidad />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/terminos"
+              element={
+                <PageTransition>
+                  <Terminos />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/cookies"
+              element={
+                <PageTransition>
+                  <Cookies />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <PageTransition>
+                  <Home />
+                </PageTransition>
+              }
+            />
+          </Routes>
+        </AnimatePresence>
 
-      <Footer />
-
-      {/* Cookie Consent Banner */}
-      <CookieConsent
-        location="bottom"
-        buttonText="Aceptar"
-        declineButtonText="Rechazar"
-        enableDeclineButton
-        cookieName="cdo-solutions-consent"
-        style={{
-          background: 'hsl(0 0% 6%)',
-          borderTop: '1px solid hsl(0 0% 15%)',
-          padding: '1rem',
-        }}
-        buttonStyle={{
-          background: 'hsl(151 100% 42%)',
-          color: 'black',
-          fontWeight: '500',
-          borderRadius: '0.5rem',
-          padding: '0.5rem 1.5rem',
-        }}
-        declineButtonStyle={{
-          background: 'transparent',
-          border: '1px solid hsl(0 0% 30%)',
-          color: 'hsl(0 0% 64%)',
-          fontWeight: '500',
-          borderRadius: '0.5rem',
-          padding: '0.5rem 1.5rem',
-        }}
-        expires={365}
-      >
-        <span className="text-sm">
-          Utilizamos cookies para mejorar tu experiencia en nuestro sitio web.{' '}
-          <a
-            href="/cookies"
-            className="text-primary hover:underline"
-          >
-            Más información
-          </a>
-        </span>
-      </CookieConsent>
-    </div>
+        <Footer />
+        <ContactModal />
+      </div>
+    </ContactModalProvider>
   );
 }
 

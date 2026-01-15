@@ -1,0 +1,38 @@
+# robots.txt for cdo.solutions
+# https://cdo.solutions/
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://cdo.solutions/sitemap.xml
+
+# Páginas legales - no indexar
+Disallow: /privacidad
+Disallow: /terminos
+Disallow: /cookies
+
+# Archivos del sistema
+Disallow: /assets/
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Crawl-delay para ser amigable con el servidor
+Crawl-delay: 1
+
+# Bots específicos de Google
+User-agent: Googlebot
+Allow: /
+Disallow: /privacidad
+Disallow: /terminos
+Disallow: /cookies
+
+User-agent: Googlebot-Image
+Allow: /images/
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /privacidad
+Disallow: /terminos
+Disallow: /cookies

@@ -1,0 +1,53 @@
+# GeoSitemap for cdo.solutions
+# Información de ubicación geográfica
+
+# Datos de la empresa
+business.name: cdo.solutions
+business.type: Digital Agency / E-commerce Solutions
+business.description: Agencia de proyectos digitales especializada en soluciones para e-commerce
+
+# Ubicación principal
+geo.position: 43.2630;-2.9350
+geo.placename: Bilbao, Bizkaia, País Vasco, España
+geo.region: ES-PV
+geo.country: ES
+
+# Coordenadas
+latitude: 43.2630
+longitude: -2.9350
+
+# Dirección
+address.street:
+address.locality: Bilbao
+address.region: Bizkaia
+address.postal_code: 48001
+address.country: España
+address.country_code: ES
+
+# Área de servicio
+service.area: España, Europa, Latinoamérica
+service.area.primary: País Vasco, España
+service.languages: es, eu, en
+
+# Contacto
+contact.email: info@cdo.solutions
+contact.phone: +34 944 000 000
+contact.website: https://cdo.solutions
+
+# Horario de atención
+hours.monday: 09:00-18:00
+hours.tuesday: 09:00-18:00
+hours.wednesday: 09:00-18:00
+hours.thursday: 09:00-18:00
+hours.friday: 09:00-14:00
+hours.saturday: Cerrado
+hours.sunday: Cerrado
+hours.timezone: Europe/Madrid
+
+# Redes y plataformas
+platform.crm: https://crm.cdo.solutions/
+
+# Información adicional para SEO local
+local.target_market: Empresas con tiendas online
+local.specialization: E-commerce, Marketing Digital, Desarrollo Web, Automatización
+local.certifications: Google Partner, Meta Business Partner

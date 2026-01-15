@@ -3,7 +3,32 @@
 @tailwind utilities;
 
 @layer base {
+  /* Light mode (default) */
   :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 98%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 151 100% 35%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 151 100% 35%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 151 100% 35%;
+    --radius: 0.5rem;
+  }
+
+  /* Dark mode */
+  .dark {
     --background: 0 0% 4%;
     --foreground: 0 0% 98%;
     --card: 0 0% 6%;
@@ -23,7 +48,6 @@
     --border: 0 0% 15%;
     --input: 0 0% 15%;
     --ring: 151 100% 42%;
-    --radius: 0.5rem;
   }
 }
 
@@ -86,14 +110,22 @@
 
   /* Glass effect */
   .glass {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.02);
     backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .dark .glass {
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   /* Gradient text */
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-cdo-green to-cdo-green-light;
+    background: linear-gradient(to right, #00D46A, #1DB954);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   /* Glow effect */
@@ -120,14 +152,24 @@
   /* Geometric background pattern */
   .geometric-bg {
     background-image:
+      linear-gradient(30deg, #e5e5e5 12%, transparent 12.5%, transparent 87%, #e5e5e5 87.5%, #e5e5e5),
+      linear-gradient(150deg, #e5e5e5 12%, transparent 12.5%, transparent 87%, #e5e5e5 87.5%, #e5e5e5),
+      linear-gradient(30deg, #e5e5e5 12%, transparent 12.5%, transparent 87%, #e5e5e5 87.5%, #e5e5e5),
+      linear-gradient(150deg, #e5e5e5 12%, transparent 12.5%, transparent 87%, #e5e5e5 87.5%, #e5e5e5),
+      linear-gradient(60deg, #f0f0f0 25%, transparent 25.5%, transparent 75%, #f0f0f0 75%, #f0f0f0),
+      linear-gradient(60deg, #f0f0f0 25%, transparent 25.5%, transparent 75%, #f0f0f0 75%, #f0f0f0);
+    background-size: 80px 140px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+  }
+
+  .dark .geometric-bg {
+    background-image:
       linear-gradient(30deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
       linear-gradient(150deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
       linear-gradient(30deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
       linear-gradient(150deg, #1a1a1a 12%, transparent 12.5%, transparent 87%, #1a1a1a 87.5%, #1a1a1a),
       linear-gradient(60deg, #222 25%, transparent 25.5%, transparent 75%, #222 75%, #222),
       linear-gradient(60deg, #222 25%, transparent 25.5%, transparent 75%, #222 75%, #222);
-    background-size: 80px 140px;
-    background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
   }
 }
 

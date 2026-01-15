@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import {
   Target,
   Users,
@@ -10,6 +9,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useScrollAnimation, useMouseParallax } from '@/hooks/useParallax';
+import { useContactModal } from '@/context/ContactModalContext';
+import { SEO, getNosotrosPageSchemas } from '@/components/seo';
 
 const values = [
   {
@@ -49,6 +50,7 @@ const highlights = [
 export function Nosotros() {
   const heroRef = useRef<HTMLElement>(null);
   const mousePosition = useMouseParallax(0.02);
+  const { openModal } = useContactModal();
   useScrollAnimation();
 
   useEffect(() => {
@@ -57,6 +59,12 @@ export function Nosotros() {
 
   return (
     <main className="pt-20">
+      <SEO
+        title="Nosotros"
+        description="Conoce a cdo.solutions, agencia especializada en soluciones digitales para e-commerce con enfoque en resultados."
+        canonical="https://cdo.solutions/nosotros"
+        schemas={getNosotrosPageSchemas()}
+      />
       {/* Hero */}
       <section
         ref={heroRef}
@@ -215,11 +223,9 @@ export function Nosotros() {
             Cuéntanos sobre tu proyecto y descubre cómo podemos ayudarte a
             alcanzar tus objetivos.
           </p>
-          <Button asChild size="lg">
-            <Link to="/contacto">
-              Contactar
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+          <Button size="lg" onClick={openModal}>
+            Contactar
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </section>
