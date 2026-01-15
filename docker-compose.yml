@@ -15,6 +15,10 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    networks:
+      - cdo-network
+    depends_on:
+      - api
 
   api:
     build:
@@ -40,6 +44,12 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
+    networks:
+      - cdo-network
+
+networks:
+  cdo-network:
+    driver: bridge
 
   # Development service (optional)
   dev:
