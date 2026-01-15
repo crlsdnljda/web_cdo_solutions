@@ -16,6 +16,31 @@ services:
       retries: 3
       start_period: 40s
 
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cdo-solutions-api
+    expose:
+      - "3001"
+    restart: unless-stopped
+    environment:
+      - PORT=3001
+      - CORS_ORIGIN=https://cdo.solutions
+      - SMTP_HOST=servicios.corporativo.online
+      - SMTP_PORT=587
+      - SMTP_SECURE=false
+      - SMTP_USER=info@cdo.solutions
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_FROM=info@cdo.solutions
+      - SMTP_TO=carlosdanielojedaojeda@gmail.com
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
   # Development service (optional)
   dev:
     image: node:20-alpine
