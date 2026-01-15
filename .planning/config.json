@@ -1,0 +1,7 @@
+{
+  "mode": "yolo",
+  "depth": "standard",
+  "parallelization": true,
+  "project": "cdo.solutions",
+  "created": "2026-01-15"
+}
